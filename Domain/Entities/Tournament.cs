@@ -10,19 +10,20 @@ namespace Domain.Entities
     public class Tournament
     {
         public int Id { get; set; }
-        public string City { get; set; }
-        public string PostalCode { get; set; }
-        public string Street { get; set; }
-        public string BuildingNumber { get; set; }
-        public string LocalNumber { get; set; }
+        public string? Name { get; set; }
+        public string? City { get; set; }
+        public string? PostalCode { get; set; }
+        public string? Street { get; set; }
+        public string? BuildingNumber { get; set; }
+        public string? LocalNumber { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public int? MaxPlayers { get; set; }
         public decimal? CostPerPlayer { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
         public TournamentStatus Status { get; set; }
         public int NumberOfRounds { get; set; }
 
-        public virtual List<User> Players { get; set; }
+        public virtual List<User>? Players { get; set; }
     }
 }
