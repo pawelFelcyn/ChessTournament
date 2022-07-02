@@ -1,4 +1,5 @@
 using Application;
+using ChessTournament.Middleware;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ChessTournamentDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection")));
 builder.Services.AddApplication().AddInfrastructure();
+builder.Services.AddScoped<ErrorHandler>();
 
 var app = builder.Build();
 
@@ -26,6 +28,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseMiddleware<ErrorHandler>();
 
 app.MapControllers();
 
