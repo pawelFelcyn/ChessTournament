@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "ChessTournament.Test": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "https://localhost:63383;http://localhost:63384"
+    }
+  }
+}
