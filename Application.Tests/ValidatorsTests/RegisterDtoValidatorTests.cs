@@ -37,6 +37,8 @@ namespace Application.Tests.ValidatorsTests
             yield return new object[] { "!INVALIDPASSWORD123" };
             yield return new object[] { "!sH2" };
             yield return new object[] { "!!!!!PPPPPdfdffdd21893791283792187391298391287398217392712" };
+            yield return new object[] { "" };
+            yield return new object[] { null };
         }
 
         [Fact]

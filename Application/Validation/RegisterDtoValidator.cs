@@ -94,7 +94,9 @@ namespace Application.Validation
         {
             var regex = new Regex(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,30}$");
             RuleFor(r => r.Password)
-                .Must(p => regex.Match(p).Success)
+                .NotEmpty()
+                .WithMessage("Password must not be empty")
+                .Must(p => p is null || regex.Match(p).Success)
                 .WithMessage("Password must be between 8 and 30 characters long, must contain uppercase and lowercase letters, at least one digit and at least one special character");
         }
 
