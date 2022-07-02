@@ -6,5 +6,5 @@ using System.Threading.Tasks;
 
 namespace Application.Dtos
 {
-    public record RegisterDto(string FirstName, string LastName, string Email, string RoleName, string Club, string City, DateTime? Birthdate, string Password, string ConfirmPassword);
+    public record RegisterDto(string FirstName, string LastName, string Email, string RoleName, string? Club, string? City, DateTime? Birthdate, string Password, string ConfirmPassword);
 }
