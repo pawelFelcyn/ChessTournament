@@ -1,4 +1,5 @@
 using Application;
+using Application.Authentication;
 using ChessTournament.Middleware;
 using Infrastructure;
 using Infrastructure.Data;
@@ -16,6 +17,11 @@ builder.Services.AddDbContext<ChessTournamentDbContext>(options => options.UseSq
 builder.Services.AddApplication().AddInfrastructure();
 builder.Services.AddScoped<ErrorHandler>();
 
+var authenticationSettings = new AuthenticationSettings();
+builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+builder.Services.AddSingleton(authenticationSettings);
+builder.Services.AddAuthentication("Bearer");
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +32,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

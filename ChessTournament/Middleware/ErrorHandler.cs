@@ -1,4 +1,6 @@
-﻿namespace ChessTournament.Middleware
+﻿using Domain.Exceptions;
+
+namespace ChessTournament.Middleware
 {
     public class ErrorHandler : IMiddleware
     {
@@ -7,6 +9,11 @@
             try
             {
                 await next.Invoke(context);
+            }
+            catch (BadRequestException e)
+            {
+                context.Response.StatusCode = 400;
+                await context.Response.WriteAsync(e.Message);
             }
             catch (Exception)
             {

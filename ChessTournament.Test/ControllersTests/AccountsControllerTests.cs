@@ -1,4 +1,6 @@
 ﻿using Application.Dtos;
+using Application.Exceptions;
+using Application.Services;
 using ChessTournament.Test.Helpers;
 using FluentAssertions;
 using Infrastructure.Data;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.VisualStudio.TestPlatform.TestHost;
+using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +75,55 @@ namespace ChessTournament.Test.ControllersTests
             user.Club.Should().BeNull();
             user.Birthdate.Should().BeNull();
             response.StatusCode.Should().Be(HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public async Task Login_ForInvalidBody_ShouldReturnBadRequestStatusCode()
+        {
+            var client = _factory.CreateClient();
+            var model = new LoginDto(null, null);
+
+            var response = await client.PostAsync("/api/accounts/login", model.ToJsonContent());
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Login_ForInvalidEmail_ShouldReturnBadReguestStatusCode()
+        {
+            var client = _factory.CreateClient();
+            var model = new LoginDto("email", "password");
+
+            var response = await client.PostAsync("/api/accounts/login", model.ToJsonContent());
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Login_ForBadPassword_ShouldReturnBadRequestStatusCode()
+        {
+            var accountService = new Mock<IAccountService>();
+            accountService.Setup(m => m.GetTokenAsync(It.IsAny<LoginDto>())).Throws<InvalidPasswordException>();
+            var client = _factory.WithService(accountService.Object).CreateClient();
+            var model = new LoginDto("email", "password");
+
+            var response = await client.PostAsync("/api/accounts/login", model.ToJsonContent());
+
+            response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        }
+
+        [Fact]
+        public async Task Login_ForGoodLoginData_ShouldReturnOkStatusCode()
+        {
+            var accountService = new Mock<IAccountService>();
+            accountService.Setup(m => m.GetTokenAsync(It.IsAny<LoginDto>())).ReturnsAsync("token");
+            var model = new LoginDto("email", "email");
+            var client = _factory.WithService(accountService.Object).CreateClient();
+
+            var response = await client.PostAsync("/api/accounts/login", model.ToJsonContent());
+            
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            (await response.Content.ReadAsStringAsync()).Should().Be("token");
         }
     }
 }

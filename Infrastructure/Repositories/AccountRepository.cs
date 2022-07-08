@@ -2,8 +2,10 @@
 using Domain.Interfaces;
 using Domain.Models;
 using Infrastructure.Data;
+using Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,9 +27,23 @@ namespace Infrastructure.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public Task<UserCredentailsInfo> GetByEmailAsync(string email)
+        public async Task<UserCredentailsInfo> GetByEmailAsync(string email)
         {
-            throw new NotImplementedException();
+            var credInfo =  (from u in _dbContext.Users
+                             select new UserCredentailsInfo()
+                             {
+                                 Id = u.Id,
+                                 Email = u.Email,
+                                 Role = u.RoleName,
+                                 PasswordHash = u.PasswordHash
+                             }).FirstOrDefault(u => u.Email == email);
+
+            if (credInfo == null)
+            {
+                throw new InvalidEmailException();
+            }
+
+            return credInfo;
         }
     }
 }

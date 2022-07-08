@@ -1,5 +1,6 @@
 ﻿using Application.Services;
 using Domain.Entities;
+using Domain.Models;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,7 @@ namespace Application
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblies(new List<Assembly>() { Assembly.GetExecutingAssembly() }, includeInternalTypes: true));
             services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+            services.AddScoped<IPasswordHasher<UserCredentailsInfo>, PasswordHasher<UserCredentailsInfo>>();
             
 
             return services;
