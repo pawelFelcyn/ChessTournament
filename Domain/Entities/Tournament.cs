@@ -23,6 +23,7 @@ namespace Domain.Entities
         public string? Description { get; set; }
         public TournamentStatus Status { get; set; }
         public int NumberOfRounds { get; set; }
+        public DateTime AddedDate { get; set; }
         public int? CreatedById { get; set; }
         public virtual User? CreatedBy { get; set; }
 

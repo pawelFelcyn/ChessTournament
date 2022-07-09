@@ -92,6 +92,8 @@ namespace Infrastructure.Data
                       .WithMany(u => u.CreatedTournaments)
                       .HasForeignKey(e => e.CreatedById)
                       .OnDelete(DeleteBehavior.SetNull);
+                entity.Property(e => e.AddedDate)
+                      .IsRequired();
             });
         }
 
