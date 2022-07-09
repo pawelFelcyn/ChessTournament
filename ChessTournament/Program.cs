@@ -4,6 +4,8 @@ using ChessTournament.Middleware;
 using Infrastructure;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +22,18 @@ builder.Services.AddScoped<ErrorHandler>();
 var authenticationSettings = new AuthenticationSettings();
 builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
 builder.Services.AddSingleton(authenticationSettings);
-builder.Services.AddAuthentication("Bearer");
+builder.Services.AddAuthentication("Bearer")
+    .AddJwtBearer(cfg =>
+    {
+        cfg.RequireHttpsMetadata = false;
+        cfg.SaveToken = true;
+        cfg.TokenValidationParameters = new()
+        {
+            ValidIssuer = authenticationSettings.JwtIssuer,
+            ValidAudience = authenticationSettings.JwtIssuer,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
+        };
+    });
 
 var app = builder.Build();
 
