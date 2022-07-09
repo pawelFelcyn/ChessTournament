@@ -20,5 +20,6 @@ namespace Domain.Entities
         public string? PasswordHash { get; set; }
 
         public virtual List<Tournament>? Tournaments { get; set; }
+        public virtual List<Tournament>? CreatedTournaments { get; set; }
     }
 }

@@ -88,6 +88,10 @@ namespace Infrastructure.Data
                 entity.Property(e => e.NumberOfRounds)
                       .IsRequired();
                 entity.HasCheckConstraint("ck_tournaments_rounds", $"[{nameof(Tournament.NumberOfRounds)}] > 0");
+                entity.HasOne(e => e.CreatedBy)
+                      .WithMany(u => u.CreatedTournaments)
+                      .HasForeignKey(e => e.CreatedById)
+                      .OnDelete(DeleteBehavior.SetNull);
             });
         }
 
